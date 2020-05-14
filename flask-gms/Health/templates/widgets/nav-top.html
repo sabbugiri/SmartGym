@@ -1,6 +1,6 @@
 <!-- Topbar -->
         <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-           <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+           <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-4x fa-dumbbell"></i>
         </div>
@@ -22,6 +22,11 @@
                   <li class="nav-item">
                     <a class="nav-link" href="#">Pricing</a>
                   </li>
+                  {% if user.user_type == 1 %}
+                   <li class="nav-item">
+                    <a class="nav-link" href="/gymadmin/dashboard">Admin Dashboard</a>
+                  </li>
+                  {% endif %}
                   <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       Dropdown link
@@ -68,14 +73,20 @@
              <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Valerie Luna</span>
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{username}}</span>
                 <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
+                {% if profile_complete == 0 %}
+                <span class="badge badge-danger badge-counter"><i class="fas fa-1x fa-exclamation-circle"></i></span>
+                {% endif %}
               </a>
               <!-- Dropdown - User Information -->
               <div class="dropdown-menu dropdown-menu-right shadow animated-grow-in" aria-labelledby="userDropdown">
                 <a class="dropdown-item" href="/profile">
                   <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                   Profile
+                  {% if profile_complete == 0 %}
+                  <span class="badge badge-danger badge-counter"><i class="fas fa-1x fa-exclamation-circle"></i></span>
+                  {% endif %}
                 </a>
                 <a class="dropdown-item" href="#">
                   <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -110,13 +121,7 @@
               
             
 
-            <!-- Nav Item - Alerts -->
-            <!--li class="nav-item dropdown no-arrow mx-1">
-              <!--a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-bell fa-fw"></i>
-                <!-- Counter - Alerts -->
-                <!--span class="badge badge-danger badge-counter">3+</span>
-              </a-->
+          
              
            
 
