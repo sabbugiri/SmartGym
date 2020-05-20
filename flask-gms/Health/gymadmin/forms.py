@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 
 from gyms.models import Gym,User
 
@@ -20,6 +21,15 @@ class GymForm(forms.Form):
 		
 
 	def clean_user(self):
+		user_id = self.cleaned_data['user']
+		user = User.objects.filter(pk = user_id).first()
+
+		return user
+
+	def save(self):
+	
+
+		
 		gym = Gym.objects.create(
 			name = self.cleaned_data["name"],
 			location = self.cleaned_data["location"],
