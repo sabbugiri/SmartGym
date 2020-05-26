@@ -103,9 +103,14 @@
   <script src="{% static 'admin/js/demo/chart-pie-demo.js' %}"></script>
   <script type="text/javascript">
      $(function () {
-      $('[data-toggle="tooltip"]').tooltip()
+      $('[data-toggle="tooltip"]').tooltip();
+       tinymce.init({
+      selector: 'textarea#editor',
+      menubar: false
+    });
     })
   </script>
+
 
 </body>
 

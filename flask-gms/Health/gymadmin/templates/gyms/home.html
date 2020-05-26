@@ -26,7 +26,7 @@
   <tbody>
   	{% for gym in gyms %}
     <tr>
-      <th scope="row">{{gym.id}}</th>
+      <th scope="row">{{forloop.counter}}</th>
       <td>{{gym.name}}</td>
       <td>{{gym.location}}</td>
       <td>{{gym.price}}</td>
@@ -39,7 +39,7 @@
     {% endfor %} 
      
   </tbody>
-    }
+    
 </table>
 
           

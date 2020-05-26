@@ -1,4 +1,4 @@
-{% extends "gymadmin-admin.html" %}
+{% extends "gymadmin_base.html" %}
 
 {% block gymadmin_body_content %}
  <!-- Content Row -->
@@ -23,7 +23,7 @@
     </tr>
     <tr>
       <th scope="row">Summary:</th>
-      <td>{{gym.summary}}</td>
+      <td>{{gym.summary | safe}}</td>
     </tr>
     <tr>
       <th scope="row">Featured Photo:</th>

@@ -43,7 +43,7 @@ def create_gym(request):
 				return redirect("/gymadmin/gyms")
 			else:
 				template = loader.get_template('add_gym.html')
-				context = {'gym_form':gym_form, 'gym_count':gym_count}
+				context = {'gym_form':gym_form, 'gym_count':gym_count, 'logged_in':True}
 				return HttpResponse(template.render(context, request))
 
 		gym_form = GymForm()
@@ -54,22 +54,50 @@ def create_gym(request):
 	else:
 		return redirect('/login')	
 
-def update_gym(request, gym_id):
+def edit_gym(request, gym_id):
+	if is_authenticated(request): 
+		user = request.session.get('username')
+		userObj = User.objects.filter(username=user).first()
+		gym_count = request.session.get('gym_count')
+		gym = Gym.objects.filter(pk = gym_id).first()
+		if gym.user_id == userObj.id:
+			template = loader.get_template('gyms/edit_gym.html')
+			context = {'gym': gym, 'gym_count':gym_count, 'logged_in':True}
+			return HttpResponse(template.render(context, request))
+
+		else:
+			return redirect('/gymadmin/gyms')
+
+	else:
+		return redirect('/login')	
+
+def update_gym(request):
 	if is_authenticated(request):
 		gym_count = request.session.get('gym_count')
-		if request.method == "POST":
-			pass
-
-		else:	
+		if request.POST:
+			gym_form = GymForm(request.POST)
+			gym_id = request.POST.get("gym_id")
 			gym = Gym.objects.filter(pk = gym_id).first()
-			gym_form = GymForm(gym)
-			template = loader.get_template('gyms/edit_gym.html')
-			context = {'gym_form':gym_form, 'gym_count':gym_count}
-			return HttpResponse(template.render(context, request))
+			if gym_form.is_valid():
+				gym.name = gym_form.cleaned_data["name"]
+				gym.location = gym_form.cleaned_data["location"]
+				gym.summary = gym_form.cleaned_data["summary"]
+				gym.featured_photo = gym_form.cleaned_data["featured_photo"]
+				gym.price = gym_form.cleaned_data["price"]
+				gym.user = gym_form.cleaned_data["user"]
+				gym.save()
+				return redirect("/gymadmin/gyms")
+			else:
+				template = loader.get_template('gyms/edit_gym.html')
+				context = {'gym': gym, 'gym_count':gym_count, 'logged_in':True}
+				return HttpResponse(template.render(context, request))
 
 
 	else:
-		return redirect('/login')		
+		return redirect('/login')	
+	
+
+
 
 
 def gyms(request):
@@ -77,9 +105,10 @@ def gyms(request):
 		template = loader.get_template('gyms/home.html')
 		user = request.session.get('username')
 		user_id = request.session.get('user_id')
+		userObj = User.objects.filter(username=user).first()
 		gym_count = request.session.get('gym_count')
 		gyms = Gym.objects.filter(user_id= user_id)
-		context = {'gyms':gyms, 'gym_count':gym_count, 'user':user}
+		context = {'gyms':gyms, 'gym_count':gym_count, 'user':userObj, 'logged_in':True}
 		return HttpResponse(template.render(context, request))
 
 	else:
@@ -93,10 +122,14 @@ def gym_details(request, gym_id):
 		template = loader.get_template('gyms/details.html')
 		gym_count = request.session.get('gym_count')
 		user = request.session.get('username')
+		userObj = User.objects.filter(username=user).first()
 		gym = Gym.objects.filter(pk = gym_id).first()
-		context = {'gym':gym, 'gym_count':gym_count, 'user':user}
-		return HttpResponse(template.render(context, request))
+		if gyms.user_id == userObj.id:
+			context = {'gym':gym, 'gym_count':gym_count, 'user':userObj,'logged_in':True}
+			return HttpResponse(template.render(context, request))
 
+		else:
+			return redirect('/gymadmin/gyms')	
 
 
 	else:
@@ -108,8 +141,8 @@ def gym_delete(request, gym_id):
 		#template = loader.get_template('gyms/details.html')
 		#gym_count = request.session.get('gym_count')
 		gym = Gym.objects.filter(pk = gym_id).first()
-		gym.delete()
-		#context = {'gym':gym, 'gym_count':gym_count, 'user':user}
+		if gym.user_id == userObj.id:
+			gym.delete()
 		return redirect('/gymadmin/gyms')
 
 
