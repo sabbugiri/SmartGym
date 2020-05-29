@@ -7,6 +7,12 @@ from .forms import GymForm
 from gyms.models import *
 
 # Create your views here.
+
+def maps(request):
+		template = loader.get_template('maps.html')
+		return HttpResponse(template.render({}, request))
+
+
 def dashboard(request):
 
 	template = loader.get_template('dashboard.html')
@@ -35,7 +41,9 @@ def dashboard(request):
 
 def create_gym(request):
 	if is_authenticated(request):
+		user = request.session.get('username')
 		gym_count = request.session.get('gym_count')
+		userObj = User.objects.filter(username = user).first()
 		if request.POST:
 			gym_form = GymForm(request.POST)
 			if gym_form.is_valid():
@@ -124,7 +132,7 @@ def gym_details(request, gym_id):
 		user = request.session.get('username')
 		userObj = User.objects.filter(username=user).first()
 		gym = Gym.objects.filter(pk = gym_id).first()
-		if gyms.user_id == userObj.id:
+		if gym.user_id == userObj.id:
 			context = {'gym':gym, 'gym_count':gym_count, 'user':userObj,'logged_in':True}
 			return HttpResponse(template.render(context, request))
 

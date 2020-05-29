@@ -10,6 +10,8 @@ class GymForm(forms.Form):
 	price = forms.IntegerField(label = "Average Cost")
 	summary = forms.CharField(widget = forms.Textarea, required = False)
 	featured_photo = forms.ImageField(required = False)
+	latitude = forms.FloatField(widget=forms.HiddenInput, required = False)
+	longitude = forms.FloatField(widget=forms.HiddenInput, required = False)
 	user = forms.IntegerField(help_text = "Please enter a valid user Id. This will be chnaged in future.")
 
 
@@ -37,6 +39,8 @@ class GymForm(forms.Form):
 			summary = self.cleaned_data["summary"],
 			featured_photo = self.cleaned_data["featured_photo"],
 			user = self.cleaned_data["user"],
+			latitude = self.cleaned_data["latitude"],
+			longitude = self.cleaned_data["longitude"]
 
 
 			)	
